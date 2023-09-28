@@ -1,0 +1,26 @@
+library(adegenet)
+library(devtools)
+library(StAMPP)
+library(readr)
+# For MAC to install dartR - make sure you install Xcode from app store
+
+library(devtools) 
+library(dartR)
+
+##CONVERT dart file to genlight
+
+gl2 <- gl.read.dart("Report_DCylin23-8324_SNP_2.csv", ind.metafile = "simple metadata.csv", topskip = 6, lastmetric = "RepAvg", probar = TRUE)
+gl3 <- gl.read.dart("Report_DCylin23-8324_SNP_3.csv", ind.metafile = "simple metadata.csv", topskip = 6, lastmetric = "RepAvg", probar = TRUE)
+
+#This function combines two genlight objects and their associated metadata. The history associated with the two genlight objects is cleared from the new genlight object. The individuals/samples must be the same in each genlight object.
+
+gl2and3combined <- gl.join(gl2, gl3, verbose = 2)
+
+##It is sensible to save your genlight object in binary form using
+saveRDS(glc100_wgc,file="glc100_wgc.Rdata")
+##and then read it in again with
+gl5 <- readRDS("gl100_onlypop.Rdata")
+
+##convert to genlight to vcf 
+library(radiator)
+raxgl5= genomic_converter(data = gl5,output = c("vcf"))
